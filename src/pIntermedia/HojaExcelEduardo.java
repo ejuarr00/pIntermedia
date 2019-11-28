@@ -93,8 +93,8 @@ public class HojaExcelEduardo {
 			String letrasColumna=lineaFormula[i].substring(0,empiezaFila);
 			//numColumna: desde el principio del string al empiezaFila (esa letra o letras) equivaldran a los numeros de las columnas
 			int numColumna=halloColumna(letrasColumna);
-			if(numColumna<0|| numColumna>18277){
-				System.out.println("Entrada Inválida. Las formulas son incorrectas, menor que A o mayor que ZZZ");
+			if(numColumna<0|| numColumna>=18277){
+				System.out.println("Entrada Inválida. Las formulas son incorrectas, menor que A=(1) o mayor que ZZZ=(18278)");
 				System.exit(0);
 
 			}
@@ -106,7 +106,7 @@ public class HojaExcelEduardo {
 				System.exit(0);
 			}
 			int numFila=Integer.parseInt(numeroFila)-1;
-			if(numFila<0|| numFila>999){
+			if(numFila<0|| numFila>=998){
 				System.out.println("Entrada Inválida. Las formulas son incorrectas, numero mayor de 999 o menor de 1");
 				System.exit(0);
 			}

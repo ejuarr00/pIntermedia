@@ -10,7 +10,7 @@ public class MainEduardo {
 		for(int i=0; i<listaHojas.size();i++){
 			//imprimeHojaEntrada(listaHojas.get(i));
 			HojaExcelEduardo oHojaExcel=new HojaExcelEduardo(listaHojas.get(i));
-			//System.out.println("las letras ZZZ son el numero (-1 por la columna): "+oHojaExcel.halloColumna("ZZZ"));
+			System.out.println("las letras ZZZ son el numero (-1 por la columna): "+oHojaExcel.halloColumna("ZZZ"));
 			oHojaExcel.resuelve();
 		}
 	}
@@ -44,8 +44,8 @@ public class MainEduardo {
 		Scanner sc=new Scanner(System.in);
 		//numero de hojas
 		numeroHojas=Integer.parseInt(sc.nextLine());
-		if(numeroHojas<=0||numeroHojas>Integer.MAX_VALUE){
-			System.out.println("Entrada Inválida. Número de hojas negativas");
+		if(numeroHojas<1){
+			System.out.println("Entrada Inválida. Número de hojas debe ser mayor que 0");
 			System.exit(0);
 		}
 		ArrayList<String[][]> listaHojas= new ArrayList<String[][]>();
@@ -55,14 +55,14 @@ public class MainEduardo {
 			String linea=sc.nextLine();
 			String []lineaColumnasyFilas= linea.split(" ");
 			int columnas=Integer.parseInt(lineaColumnasyFilas[0]);
-			if(columnas<=0||columnas>Integer.MAX_VALUE){
-				System.out.println("Entrada Inválida. Número de columnas negativas");
+			if(columnas<1||columnas>=18278){
+				System.out.println("Entrada Inválida. El Número de columnas debe estar entre 1 y 128278");
 				System.exit(0);
 			}
 			//System.out.println(columnas+" colummnasas");
 			int filas=Integer.parseInt(lineaColumnasyFilas[1]);
-			if(filas<=0||filas>Integer.MAX_VALUE){
-				System.out.println("Entrada Inválida. Número de filas negativas");
+			if(filas<1||filas>=999){
+				System.out.println("Entrada Inválida. Número de filas debe estar entre 1 y 999");
 				System.exit(0);
 			}
 			//System.out.println(filas+" filas");
