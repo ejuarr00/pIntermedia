@@ -3,14 +3,14 @@ package pIntermedia;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class MainEduardo {
+public class Main {
 	private static int numeroHojas;
 	public static void main(String[] args){
 		ArrayList<String[][]> listaHojas=lectura();
 		for(int i=0; i<listaHojas.size();i++){
 			//imprimeHojaEntrada(listaHojas.get(i));
-			HojaExcelEduardo oHojaExcel=new HojaExcelEduardo(listaHojas.get(i));
-			System.out.println("las letras ZZZ son el numero (-1 por la columna): "+oHojaExcel.halloColumna("ZZZ"));
+			HojaExcel oHojaExcel=new HojaExcel(listaHojas.get(i));
+			//System.out.println("las letras ZZZ son el numero (-1 por la columna): "+oHojaExcel.halloColumna("ZZZ"));
 			oHojaExcel.resuelve();
 		}
 	}

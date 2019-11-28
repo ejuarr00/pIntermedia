@@ -2,7 +2,7 @@ package pIntermedia;
 
 import java.util.regex.Pattern;
 
-public class HojaExcelEduardo {
+public class HojaExcel {
 
 	private String[][] hojaEntrada;
 	private int[][] hojaSalida;
@@ -10,7 +10,7 @@ public class HojaExcelEduardo {
 	private int noHeAcabado=-6666;
 
 
-	public HojaExcelEduardo(String[][]hoja){
+	public HojaExcel(String[][]hoja){
 		this.hojaEntrada=hoja;
 		this.hojaSalida=new int[hojaEntrada.length][hojaEntrada[0].length];
 		booleanaResuelta=new boolean[hojaEntrada.length][hojaEntrada[0].length];
@@ -76,7 +76,7 @@ public class HojaExcelEduardo {
 			}
 		}
 		//imprimo la hoja resuelta 
-		MainEduardo.imprimeHojaSalida(hojaSalida);
+		Main.imprimeHojaSalida(hojaSalida);
 	}
 
 	//metodo que resuelve la suma de la formula
