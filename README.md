@@ -1,2 +1,3 @@
 # pIntermedia
- practica de una pequeña hoja excel en java de prg2
+Practica intermedia prg2: pequeña hoja excel en java.
+
