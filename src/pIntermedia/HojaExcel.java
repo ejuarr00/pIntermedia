@@ -4,20 +4,19 @@ import java.util.regex.Pattern;
 
 public class HojaExcel {
 
-	private String[][] hojaEntrada;
+	private static String[][] hojaEntrada;
 	private int[][] hojaSalida;
 	boolean booleanaResuelta[][];
 	private int noHeAcabado=-6666;
 
-
 	public HojaExcel(String[][]hoja){
-		this.hojaEntrada=hoja;
-		this.hojaSalida=new int[hojaEntrada.length][hojaEntrada[0].length];
-		booleanaResuelta=new boolean[hojaEntrada.length][hojaEntrada[0].length];
+		this.setHojaEntrada(hoja);
+		this.hojaSalida=new int[getHojaEntrada().length][getHojaEntrada()[0].length];
+		booleanaResuelta=new boolean[getHojaEntrada().length][getHojaEntrada()[0].length];
 	}
 
 	//metodo para saber si es numero o no
-	private boolean esNumero(String cadena){
+	public static boolean esNumero(String cadena){
 		try{
 			int num= Integer.parseInt(cadena);
 			return true;
@@ -28,7 +27,7 @@ public class HojaExcel {
 	} 
 
 	//metodo para saber si es formula
-	private boolean esFormula(String cadena) {
+	public static boolean esFormula(String cadena) {
 		if(cadena.charAt(0)== '='){
 			return true;
 		}
@@ -51,36 +50,41 @@ public class HojaExcel {
 	public void resuelve() {
 		while(TodasFormulasResueltas()==false){
 			//recorro la hija de entrada
-			for(int f=0; f<hojaEntrada.length; f++){
-				for(int c=0; c<hojaEntrada[f].length; c++){
+			for(int f=0; f<getHojaEntrada().length; f++){
+				for(int c=0; c<getHojaEntrada()[f].length; c++){
 					//si no es formula pongo la matriz booleana a true
-					if(!esFormula(hojaEntrada[f][c])){
+					if(!esFormula(getHojaEntrada()[f][c])){
 						booleanaResuelta[f][c]=true;
 						//si es numero lo copio en la hoja de salida directamente
-						if(esNumero(hojaEntrada[f][c])){
-							hojaSalida[f][c]=Integer.parseInt(hojaEntrada[f][c]);
+						if(esNumero(getHojaEntrada()[f][c])){
+							hojaSalida[f][c]=Integer.parseInt(getHojaEntrada()[f][c]);
 						}
 						//si es formula la resuelvo
 					}else{
-						int resultado= resuelvoFormula(hojaEntrada[f][c]);
+						int resultado= resuelvoFormula(getHojaEntrada()[f][c]);
 						if(resultado!=noHeAcabado){
 							hojaSalida[f][c]=resultado;
 							booleanaResuelta[f][c]=true;
 						}
 						//si no es formula ni numero error y fin
-					}if(!esFormula(hojaEntrada[f][c]) && esNumero(hojaEntrada[f][c])==false){
-						System.out.println("Entrada Inválida. Esto no es ni número ni fórmula");
-						System.exit(0);
+					}if(!esFormula(getHojaEntrada()[f][c]) && esNumero(getHojaEntrada()[f][c])==false){
+						
+						hojaSalida[f][c]=5555;
+						//hojaSalida[f][c]=String.toString(hojaEntrada[f][c]);
+					//	System.out.println("Entrada Inválida. Esto no es ni número ni fórmula.");
+						//System.exit(0);
 					}
 				}
 			}
 		}
 		//imprimo la hoja resuelta 
 		Main.imprimeHojaSalida(hojaSalida);
+		Main.imprimeHojaSalida1(hojaEntrada);
 	}
 
 	//metodo que resuelve la suma de la formula
 	public int resuelvoFormula(String formula) {
+	
 		//borro el = del principio
 		String formulasinespacios=formula.substring(1,formula.length()/*-1*/);
 		//separo la formula por el signo +
@@ -88,34 +92,41 @@ public class HojaExcel {
 		int suma=0;
 		//ya tengo las formulas separadas en el string[]
 		for(int i=0; i< lineaFormula.length; i++){
-			//buscoPrimerNumero me dice donde empiezan los numeros(y por consiguinte las filas)
-			int empiezaFila=buscoPrimerNumero(lineaFormula[i]);
-			String letrasColumna=lineaFormula[i].substring(0,empiezaFila);
-			//numColumna: desde el principio del string al empiezaFila (esa letra o letras) equivaldran a los numeros de las columnas
-			int numColumna=halloColumna(letrasColumna);
-			if(numColumna<0|| numColumna>=18277){
-				System.out.println("Entrada Inválida. Las formulas son incorrectas, menor que A=(1) o mayor que ZZZ=(18278)");
-				System.exit(0);
+			
+			//**********************************para poder meter numeros en la hoja a mayores
+			if(esNumero(lineaFormula[i])) {
+				suma=suma+Integer.parseInt(lineaFormula[i]);
+			}else {
+				//buscoPrimerNumero me dice donde empiezan los numeros(y por consiguinte las filas)
+				int empiezaFila=buscoPrimerNumero(lineaFormula[i]);
+				String letrasColumna=lineaFormula[i].substring(0,empiezaFila);
+				//numColumna: desde el principio del string al empiezaFila (esa letra o letras) equivaldran a los numeros de las columnas
+				int numColumna=halloColumna(letrasColumna);
+				if(numColumna<0|| numColumna>=18277){
+					System.out.println("Entrada Inválida. Las formulas son incorrectas, menor que A=(1) o mayor que ZZZ=(18278).");
+					System.exit(0);
 
+				}
+				//desde el empiezafila del string al final seria el numero de la fila
+				String numeroFila=lineaFormula[i].substring(empiezaFila, lineaFormula[i].length());
+				//si meto una letra con otra letra es error
+				if(!esNumero(numeroFila)){
+					System.out.println("Entrada Inválida. Las formulas son incorrectas.");
+					System.exit(0);
+				}
+				int numFila=Integer.parseInt(numeroFila)-1;
+				if(numFila<0|| numFila>=998){
+					System.out.println("Entrada Inválida. Las formulas son incorrectas, numero mayor de 999 o menor de 1.");
+					System.exit(0);
+				}
+				//si la celda a la que voy es una formula aun no acabo y vuelvo a resolverla
+				if(booleanaResuelta[numFila][numColumna]==false){
+					return noHeAcabado;
+				}
+				//voy acumulando el resultado
+				suma=suma+hojaSalida[numFila][numColumna];
 			}
-			//desde el empiezafila del string al final seria el numero de la fila
-			String numeroFila=lineaFormula[i].substring(empiezaFila, lineaFormula[i].length());
-			//si meto una letra con otra letra es error
-			if(!esNumero(numeroFila)){
-				System.out.println("Entrada Inválida. Las formulas son incorrectas");
-				System.exit(0);
-			}
-			int numFila=Integer.parseInt(numeroFila)-1;
-			if(numFila<0|| numFila>=998){
-				System.out.println("Entrada Inválida. Las formulas son incorrectas, numero mayor de 999 o menor de 1");
-				System.exit(0);
-			}
-			//si la celda a la que voy es una formula aun no acabo y vuelvo a resolverla
-			if(booleanaResuelta[numFila][numColumna]==false){
-				return noHeAcabado;
-			}
-			//voy acumulando el resultado
-			suma=suma+hojaSalida[numFila][numColumna];
+		
 		}
 		//System.out.println(suma +"suma");
 		return suma;	
@@ -216,7 +227,7 @@ public class HojaExcel {
 			numeroLetra=26;
 			break;
 		default:
-			System.out.println("Entrada Inválida. Las letras de las formulas son incorrectas");
+			System.out.println("Entrada Inválida. Las letras de las formulas son incorrectas.");
 			System.exit(0);
 		}
 		return numeroLetra;		
@@ -232,5 +243,13 @@ public class HojaExcel {
 			}
 		}			
 		return -1;//nunca debo llegar aqui
+	}
+
+	public static String[][] getHojaEntrada() {
+		return hojaEntrada;
+	}
+
+	public void setHojaEntrada(String[][] hojaEntrada) {
+		this.hojaEntrada = hojaEntrada;
 	}
 }
